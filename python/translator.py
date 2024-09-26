@@ -239,17 +239,39 @@ def my_solution(input_text):
 
     else:
         #translate from english to braille
-        for char in input_text: #check if character is part of required characters to translate
-            if ord(char) in ascii_to_english.keys():
+        index = 0
+        while index < len(input_text): #check if character is part of required characters to translate
+            if ord(input_text[index]) in ascii_to_english.keys():
                 #check if capital
-                if ord(char) >= 65 and ord(char) <= 90:
-                    print()
+                if input_text[index].isupper():
+                    #append "capital follows" first
+                    return_text += '.....O' + alphas_english_to_braille[input_text[index].lower()]
                 #check if number
+                elif input_text[index].isdecimal():
+                    return_text += '.O.OOO' #append "number follows"
+                    #append all following numbers
+                    #check if following character is a number
+                    while input_text[index].isdecimal:
+                        return_text += numbers_english_to_braille[input_text[index]]
+                        index += 1
+                    index -= 1
                 #check if is a period/decimal, and if numbers come after until next space
-                #else append character
-                print()
+                elif input_text[index] == '.' and input_text[index+1].isdecimal():
+                    return_text += '.O...O' #append "decimal follows"
+                    #append all following numbers
+                    #check if following character is a number
+                    while input_text[index+1].isdecimal:
+                        index += 1
+                        return_text += numbers_english_to_braille[input_text[index]]
+
+                #else append character (lowercase alpha or other)
+                elif input_text[index] in alphas_english_to_braille.keys():
+                    return_text += alphas_english_to_braille[input_text[index]]
+                elif input_text[index] in other_english_to_braille.keys():
+                    return_text += other_english_to_braille[input_text[index]]
 
             else: return_text += '(invalid character)'
+            index += 1
 
     return return_text
 
@@ -296,8 +318,8 @@ def is_valid_cell(cell) -> bool:
     if cell == 'O.OO..': return True #8
     if cell == '.OO...': return True #9
     if cell == '.OOO..': return True #0
-    if cell == '.....O': return True #cellapital follows
-    if cell == '.O...O': return True #decellimal follows
+    if cell == '.....O': return True #capital follows
+    if cell == '.O...O': return True #decimal follows
     if cell == '.O.OOO': return True #number follows
     if cell == '..OO.O': return True #.
     if cell == '..O...': return True #,
@@ -314,6 +336,12 @@ def is_valid_cell(cell) -> bool:
     if cell == '......': return True #space
     return False
 
-if __name__ == "__main__":
-    input = sys.argv[1]
-    print(input)
+# if __name__ == "__main__":
+#     input = sys.argv[1]
+#     print(input)
+
+var = 'hi'
+var2 = my_solution(var)
+
+print(f"var: {var}")
+print(f"var2: {var2}")
