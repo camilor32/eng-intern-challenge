@@ -199,19 +199,20 @@ def my_solution(input_text):
                 cell_index_group[0] += input_text[cell_index_group[1]]
                 cell_index_group[1] += 1
 
-        while(input_len-cell_index_group[1]-6 > 0):#if input braille string is not multiple of 6, final characters will be omited
+        while(input_len-cell_index_group[1]-6 >= 0):#if input braille string is not multiple of 6, final characters will be omited
             read_next_cell()
             if is_valid_cell(cell_index_group[0]): #check if it is a valid braille word/cell
                 #check if cell is a modifier
-                if cell_index_group[0] == '....o': #capital follows (only next character)
+                if cell_index_group[0] == '.....O': #capital follows (only next character)
                     #capitalize next cell before appending it to return_text
+                    print("this")
                     read_next_cell()
-                    if cell_index_group[0] in alphas_braille_to_english.keys(): 
+                    if cell_index_group[0] in alphas_braille_to_english.keys():
                         return_text += alphas_braille_to_english[cell_index_group[0]].upper()
                     else: 
                         return_text += '(invalid: "capital follows" not followed by alpha)'
 
-                elif cell_index_group[0] == '.o...o': #decimal follows
+                elif cell_index_group[0] == '.O...O': #decimal follows
                     #append decimal to return_text before appending the next cell
                     read_next_cell()
                     if cell_index_group[0] in numbers_braille_to_english.keys(): 
@@ -219,13 +220,15 @@ def my_solution(input_text):
                     else: 
                         return_text += '(invalid: "decimal follows" not followed by number)'
                     
-                elif cell_index_group[0] == '.o.ooo': #number follows (until next space)
+                elif cell_index_group[0] == '.O.OOO': #number follows (until none decimal)
                     #read next cell as number and append to return_text
                     read_next_cell()
-                    if cell_index_group[0] in numbers_braille_to_english.keys(): 
-                        return_text += numbers_braille_to_english[cell_index_group[0]]
-                    else: 
-                        return_text += '(invalid: "number follows" not followed by number)'
+                    while cell_index_group[0] != '......':
+                        if cell_index_group[0] in numbers_braille_to_english.keys(): 
+                            return_text += numbers_braille_to_english[cell_index_group[0]]
+                        else: 
+                            return_text += '(invalid: "number follows" not followed by number)'
+                        read_next_cell()
 
                 #else append the 'alpha' or 'other' character to return_text
                 elif cell_index_group[0] in alphas_braille_to_english.keys(): 
@@ -336,12 +339,12 @@ def is_valid_cell(cell) -> bool:
     if cell == '......': return True #space
     return False
 
-# if __name__ == "__main__":
-#     input = sys.argv[1]
-#     print(input)
+if __name__ == "__main__":
+    input = sys.argv[1]
+    print(my_solution(input))
 
-var = 'hi'
-var2 = my_solution(var)
+# var = 'hi'
+# var2 = my_solution(var)
 
-print(f"var: {var}")
-print(f"var2: {var2}")
+# print(f"var: {var}")
+# print(f"var2: {var2}")
